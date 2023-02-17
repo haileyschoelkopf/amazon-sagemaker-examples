@@ -9,6 +9,8 @@ import numpy as np
 import smdistributed.modelparallel.torch as smp
 import torch
 
+from streaming import StreamingDataset
+
 
 class WikiPretrainingDataset(torch.utils.data.Dataset):
     def __init__(self, input_file, max_pred_length):
@@ -131,9 +133,17 @@ def create_pretraining_dataloader(
     zipped: bool = True,
     use_last_file_only: bool = False,
     data_type: str = "openwebtext",
+    local = None,
+    remote = None,
 ):
     if smp.pp_rank() == 0:
-        if data_type == "openwebtext":
+        if data_type = "streamingtext":
+            data = StreamingDataset(
+                local=local,
+                remote=remote,
+                shuffle=True,
+            )
+        elif data_type == "openwebtext":
             data = OpenwebtextPretrainingDataset(
                 input_paths=input_paths, max_sequence_length=max_sequence_length, zipped=zipped, use_last_file_only=use_last_file_only
             )
